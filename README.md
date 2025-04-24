@@ -25,7 +25,7 @@ An intelligent voice assistant that controls Windows applications and generates 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/windows-voice-ai.git
+git clone git@github.com:shahidx0x/windows-voice-control-ai-assistant.git
 
 # Navigate to project directory
 cd windows-voice-ai
