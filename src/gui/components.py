@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext, ttk
 import tkinter.font as tkfont
+from ..constants.components import UIConstants
 
 class LogArea:
     """A scrollable text area for logging messages"""
@@ -10,9 +11,9 @@ class LogArea:
             width=50, 
             height=20, 
             wrap=tk.WORD, 
-            fg="white", 
-            bg="#333", 
-            font=("Courier", 10)
+            fg=UIConstants.LIGHT_TEXT, 
+            bg=UIConstants.LOG_BG, 
+            font=(UIConstants.FONT_COURIER, UIConstants.SIZE_SMALL)
         )
         self.text_widget.pack(padx=10, pady=10)
         self.text_widget.config(state=tk.DISABLED)
@@ -29,11 +30,11 @@ class CommandButton:
     def __init__(self, root, command):
         self.button = tk.Button(
             root, 
-            text="Give Command", 
+            text=UIConstants.BUTTON_TEXT, 
             command=command,
-            fg="white", 
-            bg="#757575", 
-            font=("Arial", 12)
+            fg=UIConstants.LIGHT_TEXT, 
+            bg=UIConstants.BUTTON_BG, 
+            font=(UIConstants.FONT_ARIAL, UIConstants.SIZE_MEDIUM)
         )
         self.button.pack()
 
@@ -46,32 +47,36 @@ class MicrophoneSelector:
         # Create style for material design look
         style = ttk.Style()
         style.configure(
-            "Material.TCombobox",
-            background="#2c2c2c",
-            fieldbackground="#2c2c2c",
-            foreground="white",
-            arrowcolor="white",
-            selectbackground="#404040",
-            selectforeground="white"
+            UIConstants.COMBOBOX_STYLE,
+            background=UIConstants.DARKER_BG,
+            fieldbackground=UIConstants.DARKER_BG,
+            foreground=UIConstants.LIGHT_TEXT,
+            arrowcolor=UIConstants.LIGHT_TEXT,
+            selectbackground=UIConstants.SELECT_BG,
+            selectforeground=UIConstants.LIGHT_TEXT
         )
 
         # Container frame
-        self.frame = tk.Frame(root, bg="#1e1e1e")
+        self.frame = tk.Frame(root, bg=UIConstants.DARK_BG)
         self.frame.pack(fill=tk.X, padx=20, pady=(15,5))
 
         # Label with material design font
-        label_font = tkfont.Font(family="Segoe UI", size=10, weight="normal")
+        label_font = tkfont.Font(
+            family=UIConstants.FONT_SEGOE, 
+            size=UIConstants.SIZE_SMALL, 
+            weight="normal"
+        )
         self.label = tk.Label(
             self.frame, 
-            text="SELECT MICROPHONE", 
-            fg="#64B5F6",
-            bg="#1e1e1e", 
+            text=UIConstants.MIC_SELECT_TEXT, 
+            fg=UIConstants.ACCENT_BLUE,
+            bg=UIConstants.DARK_BG, 
             font=label_font
         )
         self.label.pack(anchor="w", pady=(0,5))
 
         # Combobox container for full width effect
-        self.combo_frame = tk.Frame(self.frame, bg="#1e1e1e")
+        self.combo_frame = tk.Frame(self.frame, bg=UIConstants.DARK_BG)
         self.combo_frame.pack(fill=tk.X)
         
         # Configure grid for full width
@@ -82,7 +87,7 @@ class MicrophoneSelector:
             self.combo_frame,
             values=self.mic_names,
             state="readonly",
-            style="Material.TCombobox"
+            style=UIConstants.COMBOBOX_STYLE
         )
         self.combo.grid(row=0, column=0, sticky="ew")
         
@@ -90,7 +95,7 @@ class MicrophoneSelector:
         if self.mic_names:
             self.combo.current(0)  # Set first item as selected
         else:
-            self.combo.set("No microphones found")
+            self.combo.set(UIConstants.NO_MIC_TEXT)
             
         # Bind selection event
         self.combo.bind('<<ComboboxSelected>>', on_select)
@@ -103,6 +108,6 @@ class MicrophoneSelector:
         self.border = tk.Frame(
             self.frame, 
             height=2, 
-            bg="#64B5F6"
+            bg=UIConstants.ACCENT_BLUE
         )
         self.border.pack(fill=tk.X, pady=(0,5))

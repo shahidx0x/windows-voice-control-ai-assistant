@@ -3,7 +3,7 @@ import threading
 from .components import LogArea, CommandButton, MicrophoneSelector
 from ..services.speech_service import SpeechService
 from ..utils.logger import logger
-from ..constants.strings import AppStrings
+from ..constants.window import AppStrings
 
 class MainWindow:
     """Main application window"""
