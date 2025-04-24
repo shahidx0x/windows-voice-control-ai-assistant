@@ -5,18 +5,32 @@ class SpeechService:
     """Handles speech recognition functionality"""
     def __init__(self):
         self.recognizer = sr.Recognizer()
-        self.mic_index = 0
         self.microphones = self.get_microphone_list()
-        logger.info("Speech service initialized")
+        self.mic_index = 0 if not self.microphones else self.microphones[0][1]
+        logger.info(f"Speech service initialized with microphone index {self.mic_index}")
+
 
     def get_microphone_list(self):
-        """Get list of available microphones"""
+        """Get list of available microphones that start with 'Microphone'"""
         try:
-            return sr.Microphone.list_microphone_names()
+            mic_names = sr.Microphone.list_microphone_names()
+            # Create list of tuples with (mic_name, index) only for mics starting with "Microphone"
+            filtered_mics = [
+                (name, idx) for idx, name in enumerate(mic_names) 
+                if name.startswith("Microphone")
+            ]
+            
+            if not filtered_mics:
+                logger.warning("No microphones found starting with 'Microphone', using default")
+                return [("Default Microphone", 0)]
+                
+            logger.info(f"Found {len(filtered_mics)} compatible microphones")
+            return filtered_mics
+            
         except Exception as e:
             logger.error(f"Failed to get microphone list: {str(e)}")
-            return ["Default Microphone"]
-
+            return [("Default Microphone", 0)]
+        
     def set_microphone(self, index):
         """Set the active microphone by index"""
         self.mic_index = index

@@ -3,6 +3,7 @@ import threading
 from .components import LogArea, CommandButton, MicrophoneSelector
 from ..services.speech_service import SpeechService
 from ..utils.logger import logger
+from ..constants.strings import AppStrings
 
 class MainWindow:
     """Main application window"""
@@ -16,14 +17,14 @@ class MainWindow:
         # Initialize UI components
         self.setup_components()
         
-        logger.info("Application window initialized")
+        logger.info(AppStrings.APP_INIT)
 
     def setup_window(self):
         """Configure the main window properties"""
-        self.root.title("Speech Recognition Terminal")
-        self.root.geometry("400x300+100+100")
+        self.root.title(AppStrings.WINDOW_TITLE)
+        self.root.geometry(AppStrings.WINDOW_GEOMETRY)
         self.root.attributes("-topmost", True)
-        self.root.configure(bg="#1e1e1e")
+        self.root.configure(bg=AppStrings.WINDOW_BG_COLOR)
         
         # Add window close handler
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -46,15 +47,16 @@ class MainWindow:
 
         # Create log area
         self.log_area = LogArea(self.root)
-        self.log_area.log("Application started")
+        self.log_area.log(AppStrings.APP_STARTED)
 
     def on_mic_select(self, event):
         """Handle microphone selection"""
         selected_mic = event.widget.get()
-        mic_index = event.widget.current()
+        # Get the actual device index instead of the combobox index
+        mic_index = self.mic_selector.get_selected_index()
         self.speech_service.set_microphone(mic_index)
-        self.log_area.log(f"Selected microphone: {selected_mic}")
-        logger.info(f"Microphone changed to: {selected_mic}")
+        self.log_area.log(AppStrings.MIC_CHANGED.format(selected_mic))
+        logger.info(AppStrings.MIC_CHANGED.format(selected_mic))
 
     def on_button_click(self):
         """Handle command button click"""
@@ -69,7 +71,7 @@ class MainWindow:
 
     def on_closing(self):
         """Handle window closing"""
-        logger.info("Application shutting down")
+        logger.info(AppStrings.APP_SHUTDOWN)
         self.root.destroy()
 
     def run(self):
@@ -77,5 +79,5 @@ class MainWindow:
         try:
             self.root.mainloop()
         except Exception as e:
-            logger.error(f"Application error: {str(e)}")
+            logger.error(AppStrings.APP_ERROR.format(str(e)))
             raise

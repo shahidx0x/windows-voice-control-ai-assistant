@@ -7,7 +7,7 @@ class LogArea:
     def __init__(self, root):
         self.text_widget = scrolledtext.ScrolledText(
             root, 
-            width=40, 
+            width=50, 
             height=20, 
             wrap=tk.WORD, 
             fg="white", 
@@ -35,11 +35,14 @@ class CommandButton:
             bg="#757575", 
             font=("Arial", 12)
         )
-        self.button.pack(anchor="w", pady=20, padx=30)
+        self.button.pack()
 
 class MicrophoneSelector:
     """A Material Design dropdown for selecting the input microphone"""
     def __init__(self, root, mic_list, on_select):
+        self.mic_names = [mic[0] for mic in mic_list]
+        self.mic_indices = [mic[1] for mic in mic_list]
+
         # Create style for material design look
         style = ttk.Style()
         style.configure(
@@ -61,7 +64,7 @@ class MicrophoneSelector:
         self.label = tk.Label(
             self.frame, 
             text="SELECT MICROPHONE", 
-            fg="#64B5F6",  # Material Blue 300
+            fg="#64B5F6",
             bg="#1e1e1e", 
             font=label_font
         )
@@ -77,20 +80,29 @@ class MicrophoneSelector:
         # Combobox with material design style
         self.combo = ttk.Combobox(
             self.combo_frame,
-            values=mic_list,
+            values=self.mic_names,
             state="readonly",
             style="Material.TCombobox"
         )
         self.combo.grid(row=0, column=0, sticky="ew")
         
-        # Set default value
-        self.combo.set(mic_list[0] if mic_list else "No microphones found")
+        # Set default selection
+        if self.mic_names:
+            self.combo.current(0)  # Set first item as selected
+        else:
+            self.combo.set("No microphones found")
+            
+        # Bind selection event
         self.combo.bind('<<ComboboxSelected>>', on_select)
+        
+        # Trigger selection event for default value
+        if self.mic_names:
+            self.combo.event_generate('<<ComboboxSelected>>')
 
         # Add bottom border effect
         self.border = tk.Frame(
             self.frame, 
             height=2, 
-            bg="#64B5F6"  # Material Blue 300
+            bg="#64B5F6"
         )
         self.border.pack(fill=tk.X, pady=(0,5))
